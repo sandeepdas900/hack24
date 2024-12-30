@@ -1,6 +1,5 @@
-
 provider "aws" {
-  region = "ap-south-1"  # Region for India
+  region = "ap-south-1"  # Replace with your AWS region
 }
 
 resource "aws_instance" "example" {
