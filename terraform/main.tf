@@ -1,4 +1,4 @@
-```hcl
+
 provider "aws" {
   region = "ap-south-1"  # Region for India
 }
@@ -12,4 +12,3 @@ resource "aws_s3_bucket" "mybucket" {
   bucket = "mybucket830287396e486"
   acl    = "private"
 }
-```
