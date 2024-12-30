@@ -1,37 +1,39 @@
 trigger:
-- main  # Trigger pipeline when changes are pushed to the main branch
+- main
+
+# Stages
+# Stage-1:
+  # Task-1: Copy terraform-manifests files to Build Artifact Directory
+  # Task-2: Publish build articats to Azure Pipelines
+# Pipeline Hierarchial Flow: Stages -> Stage -> Jobs -> Job -> Steps -> Task1, Task2, Task3  
 
 stages:
-# Stage 1: Build and Artifact Management
+# Build Stage 
 - stage: Build
-  displayName: Build and Artifact Management
+  displayName: Build Stage
   jobs:
   - job: Build
     displayName: Build Job
     pool:
-      vmImage: 'ubuntu-latest'  # Ubuntu-based image for the agent
-    steps:
-    # Task 1: List contents of the System Default Working Directory
-    - bash: echo "Contents in System Default Working Directory"; ls -R $(System.DefaultWorkingDirectory)
-    
-    # Task 2: List contents of Build Artifact Staging Directory before copying files
-    - bash: echo "Before copying to Build Artifact Directory"; ls -R $(Build.ArtifactStagingDirectory)
-    
-    # Task 3: Copy files (Copy files from source folder to target folder)
+      vmImage: 'ubuntu-latest'
+    steps: 
+## Publish Artifacts pipeline code in addition to Build and Push          
+    - bash: echo Contents in System Default Working Directory; ls -R $(System.DefaultWorkingDirectory)        
+    - bash: echo Before copying Contents in Build Artifact Directory; ls -R $(Build.ArtifactStagingDirectory)        
+    # Task-2: Copy files (Copy files from a source folder to target folder)
+    # Source Directory: $(System.DefaultWorkingDirectory)/terraform-manifests
+    # Target Directory: $(Build.ArtifactStagingDirectory)
     - task: CopyFiles@2
       inputs:
-        SourceFolder: '$(System.DefaultWorkingDirectory)/terraform-manifests'  # Source folder with Terraform configuration
-        Contents: '**'  # Copy all contents recursively
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'  # Target folder for artifacts
-        OverWrite: true  # Allow overwriting of existing files
-        
-    # Task 4: List files from Build Artifact Staging Directory after copy
-    - bash: echo "After copying to Build Artifact Directory"; ls -R $(Build.ArtifactStagingDirectory)
-    
-    # Task 5: Publish build artifacts to Azure Pipelines
+        SourceFolder: '$(System.DefaultWorkingDirectory)/terraform-manifests'
+        Contents: '**'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+        OverWrite: true
+    # List files from Build Artifact Staging Directory - After Copy
+    - bash: echo After copying to Build Artifact Directory; ls -R $(Build.ArtifactStagingDirectory)  
+    # Task-3: Publish build artifacts (Publish build to Azure Pipelines)           
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'  # Path to the artifact directory
-        ArtifactName: 'terraform-manifests'  # Artifact name
-        publishLocation: 'Container'  # Publish to the default Azure container
-
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'terraform-manifests'
+        publishLocation: 'Container'  
