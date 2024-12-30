@@ -1,24 +1,24 @@
-provider "aws" {
-  region = "ap-south-1"
-}
-
-resource "aws_vpc" "main" {
+resource "aws_vpc" "example" {
   cidr_block = "10.0.0.0/16"
 }
 
-resource "aws_subnet" "main" {
-  vpc_id            = aws_vpc.main.id
+resource "aws_subnet" "example" {
+  vpc_id            = aws_vpc.example.id
   cidr_block        = "10.0.1.0/24"
-  availability_zone = "ap-south-1a"
+  availability_zone = "us-west-2a"
 }
 
-resource "aws_instance" "web" {
-  ami           = "ami-0abcdef1234567890" # Replace with a valid AMI ID for ap-south-1
+resource "aws_instance" "example" {
+  ami           = "ami-0c55b159cbfafe1f0"
   instance_type = "t2.micro"
-  subnet_id     = aws_subnet.main.id
+  subnet_id     = aws_subnet.example.id
+
+  tags = {
+    Name = "ExampleInstance"
+  }
 }
 
-resource "aws_s3_bucket" "bucket" {
-  bucket = "mybucket830287396e486"
+resource "aws_s3_bucket" "example" {
+  bucket = "example-bucket-terraform-123456789"
   acl    = "private"
 }
