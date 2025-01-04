@@ -3,10 +3,6 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_s3_bucket" "gdiujfgdkjf" {
-  bucket = "gdiujfgdkjf"
-}
-
 resource "aws_vpc" "SouthRegionVPC" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
@@ -18,12 +14,19 @@ resource "aws_vpc" "SouthRegionVPC" {
 }
 
 resource "aws_subnet" "SouthRegionSubnet" {
-  vpc_id                  = aws_vpc.SouthRegionVPC.id
-  cidr_block              = "10.0.1.0/24"
-  map_public_ip_on_launch = true
+  vpc_id            = aws_vpc.SouthRegionVPC.id
+  cidr_block        = "10.0.1.0/24"
 
   tags = {
     Name = "SouthRegionSubnet"
+  }
+}
+
+resource "aws_s3_bucket" "gdiujfgdkjfdf" {
+  bucket = "gdiujfgdkjfdf"
+
+  tags = {
+    Name = "gdiujfgdkjfdf"
   }
 }
 
